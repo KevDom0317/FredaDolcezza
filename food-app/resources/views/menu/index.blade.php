@@ -20,15 +20,27 @@ use Illuminate\Support\Facades\Storage;
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
                 <div class="flex justify-between items-center">
                     <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Nuestro Menú</h1>
-                    @auth
-                        <a href="{{ route('dashboard') }}" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
-                            Panel Admin
+                    <div class="flex items-center space-x-4">
+                        <a href="{{ route('cart.index') }}" class="relative text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                            @if(session('cart') && count(session('cart')) > 0)
+                                <span class="absolute -top-2 -right-2 bg-indigo-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                                    {{ count(session('cart')) }}
+                                </span>
+                            @endif
                         </a>
-                    @else
-                        <a href="{{ route('login') }}" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
-                            Iniciar Sesión
-                        </a>
-                    @endauth
+                        @auth
+                            <a href="{{ route('dashboard') }}" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
+                                Panel Admin
+                            </a>
+                        @else
+                            <a href="{{ route('login') }}" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
+                                Iniciar Sesión
+                            </a>
+                        @endauth
+                    </div>
                 </div>
             </div>
         </header>
@@ -69,9 +81,17 @@ use Illuminate\Support\Facades\Storage;
                                                 <span class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">
                                                     ${{ number_format($product->price, 2) }}
                                                 </span>
-                                                <a href="{{ route('menu.show', $product->id) }}" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
-                                                    Ver Detalle
-                                                </a>
+                                                <div class="flex space-x-2">
+                                                    <a href="{{ route('menu.show', $product->id) }}" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                                                        Ver
+                                                    </a>
+                                                    <form action="{{ route('cart.add', $product->id) }}" method="POST" class="inline">
+                                                        @csrf
+                                                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                                                            Agregar
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

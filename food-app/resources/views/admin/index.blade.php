@@ -30,7 +30,9 @@
                         <div class="bg-yellow-100 dark:bg-yellow-900 p-4 rounded-lg">
                             <h3 class="font-semibold text-lg mb-2">Pedidos</h3>
                             <p class="text-sm mb-2">Revisa y gestiona los pedidos</p>
-                            <p class="text-xs text-gray-600 dark:text-gray-400">Próximamente</p>
+                            <a href="{{ route('admin.orders.index') }}" class="text-sm text-yellow-700 dark:text-yellow-300 hover:underline">
+                                Gestionar pedidos →
+                            </a>
                         </div>
                     </div>
                 </div>

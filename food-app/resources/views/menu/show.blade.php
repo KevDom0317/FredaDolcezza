@@ -89,12 +89,29 @@ use Illuminate\Support\Facades\Storage;
                             @endif
                         </div>
 
-                        <!-- Botón para agregar al carrito (se implementará en la siguiente fase) -->
+                        <!-- Botón para agregar al carrito -->
                         @if($product->is_available)
                             <div class="mt-6">
-                                <button class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
-                                    Agregar al Carrito
-                                </button>
+                                <form action="{{ route('cart.add', $product->id) }}" method="POST" class="mb-4">
+                                    @csrf
+                                    <div class="flex items-center space-x-4 mb-4">
+                                        <label for="quantity" class="text-sm font-medium text-gray-700 dark:text-gray-300">Cantidad:</label>
+                                        <input 
+                                            type="number" 
+                                            id="quantity"
+                                            name="quantity" 
+                                            value="1" 
+                                            min="1" 
+                                            class="w-20 px-3 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md text-center"
+                                        >
+                                    </div>
+                                    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
+                                        Agregar al Carrito
+                                    </button>
+                                </form>
+                                <a href="{{ route('cart.index') }}" class="block w-full bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 px-6 rounded-lg text-center transition-colors">
+                                    Ver Carrito
+                                </a>
                             </div>
                         @endif
                     </div>
