@@ -1,12 +1,15 @@
 <?php
 
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\MenuController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Rutas públicas del menú
+Route::get('/', [MenuController::class, 'index'])->name('menu.index');
+Route::get('/producto/{id}', [MenuController::class, 'show'])->name('menu.show');
+Route::get('/categoria/{id}', [MenuController::class, 'category'])->name('menu.category');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -25,6 +28,9 @@ Route::middleware('auth')->group(function () {
         
         // Rutas de categorías
         Route::resource('categories', CategoryController::class);
+        
+        // Rutas de productos
+        Route::resource('products', ProductController::class);
     });
 });
 

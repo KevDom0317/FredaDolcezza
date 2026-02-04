@@ -16,7 +16,9 @@
                         <div class="bg-blue-100 dark:bg-blue-900 p-4 rounded-lg">
                             <h3 class="font-semibold text-lg mb-2">Productos</h3>
                             <p class="text-sm mb-2">Gestiona tu menú de productos</p>
-                            <p class="text-xs text-gray-600 dark:text-gray-400">Próximamente</p>
+                            <a href="{{ route('admin.products.index') }}" class="text-sm text-blue-700 dark:text-blue-300 hover:underline">
+                                Gestionar productos →
+                            </a>
                         </div>
                         <div class="bg-green-100 dark:bg-green-900 p-4 rounded-lg">
                             <h3 class="font-semibold text-lg mb-2">Categorías</h3>
