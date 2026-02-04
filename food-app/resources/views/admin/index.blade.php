@@ -15,15 +15,20 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
                         <div class="bg-blue-100 dark:bg-blue-900 p-4 rounded-lg">
                             <h3 class="font-semibold text-lg mb-2">Productos</h3>
-                            <p class="text-sm">Gestiona tu menú de productos</p>
+                            <p class="text-sm mb-2">Gestiona tu menú de productos</p>
+                            <p class="text-xs text-gray-600 dark:text-gray-400">Próximamente</p>
                         </div>
                         <div class="bg-green-100 dark:bg-green-900 p-4 rounded-lg">
                             <h3 class="font-semibold text-lg mb-2">Categorías</h3>
-                            <p class="text-sm">Organiza tus productos por categorías</p>
+                            <p class="text-sm mb-2">Organiza tus productos por categorías</p>
+                            <a href="{{ route('admin.categories.index') }}" class="text-sm text-green-700 dark:text-green-300 hover:underline">
+                                Gestionar categorías →
+                            </a>
                         </div>
                         <div class="bg-yellow-100 dark:bg-yellow-900 p-4 rounded-lg">
                             <h3 class="font-semibold text-lg mb-2">Pedidos</h3>
-                            <p class="text-sm">Revisa y gestiona los pedidos</p>
+                            <p class="text-sm mb-2">Revisa y gestiona los pedidos</p>
+                            <p class="text-xs text-gray-600 dark:text-gray-400">Próximamente</p>
                         </div>
                     </div>
                 </div>

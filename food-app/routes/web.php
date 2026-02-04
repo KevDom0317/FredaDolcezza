@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,9 +16,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::get('/admin', function () {
-        return view('admin.index');
-    })->middleware('admin')->name('admin.index');
+    
+    // Rutas de administración
+    Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/', function () {
+            return view('admin.index');
+        })->name('index');
+        
+        // Rutas de categorías
+        Route::resource('categories', CategoryController::class);
+    });
 });
 
 require __DIR__.'/auth.php';
