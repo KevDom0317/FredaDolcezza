@@ -4,15 +4,15 @@ use Illuminate\Support\Facades\Storage;
 
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+        <h2 class="font-semibold text-xl text-white leading-tight">
             {{ __('Editar Producto') }}
         </h2>
     </x-slot>
 
     <div class="py-12">
         <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg border-2 border-teal-light">
+                <div class="p-6 text-gray-900">
                     <form method="POST" action="{{ route('admin.products.update', $product) }}" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
@@ -27,14 +27,14 @@ use Illuminate\Support\Facades\Storage;
                         <!-- Descripción -->
                         <div class="mb-4">
                             <x-input-label for="description" :value="__('Descripción')" />
-                            <textarea id="description" name="description" rows="4" class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">{{ old('description', $product->description) }}</textarea>
+                            <textarea id="description" name="description" rows="4" class="block mt-1 w-full border-teal-light focus:border-teal-medium focus:ring-teal-light rounded-md shadow-sm">{{ old('description', $product->description) }}</textarea>
                             <x-input-error :messages="$errors->get('description')" class="mt-2" />
                         </div>
 
                         <!-- Categoría -->
                         <div class="mb-4">
                             <x-input-label for="category_id" :value="__('Categoría')" />
-                            <select id="category_id" name="category_id" class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" required>
+                            <select id="category_id" name="category_id" class="block mt-1 w-full border-teal-light focus:border-teal-medium focus:ring-teal-light rounded-md shadow-sm" required>
                                 <option value="">Seleccione una categoría</option>
                                 @foreach($categories as $category)
                                     <option value="{{ $category->id }}" {{ old('category_id', $product->category_id) == $category->id ? 'selected' : '' }}>
@@ -66,7 +66,7 @@ use Illuminate\Support\Facades\Storage;
                         <!-- Nueva Imagen -->
                         <div class="mb-4">
                             <x-input-label for="image" :value="__('Nueva Imagen (opcional)')" />
-                            <input id="image" name="image" type="file" accept="image/*" class="block mt-1 w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 dark:file:bg-indigo-900 dark:file:text-indigo-300">
+                            <input id="image" name="image" type="file" accept="image/*" class="block mt-1 w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-teal-pastel file:text-teal-dark hover:file:bg-teal-light">
                             <x-input-error :messages="$errors->get('image')" class="mt-2" />
                             <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Formatos permitidos: JPEG, PNG, JPG, GIF. Tamaño máximo: 2MB</p>
                         </div>
@@ -74,14 +74,14 @@ use Illuminate\Support\Facades\Storage;
                         <!-- Estado Disponible -->
                         <div class="mb-4">
                             <label class="inline-flex items-center">
-                                <input type="checkbox" name="is_available" value="1" {{ old('is_available', $product->is_available) ? 'checked' : '' }} class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-900">
+                                <input type="checkbox" name="is_available" value="1" {{ old('is_available', $product->is_available) ? 'checked' : '' }} class="rounded border-teal-light text-teal-dark shadow-sm focus:ring-teal-light">
                                 <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Producto disponible') }}</span>
                             </label>
                         </div>
 
                         <!-- Botones -->
                         <div class="flex items-center justify-end space-x-4">
-                            <a href="{{ route('admin.products.index') }}" class="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100">
+                            <a href="{{ route('admin.products.index') }}" class="text-teal-dark hover:text-teal-medium font-medium">
                                 {{ __('Cancelar') }}
                             </a>
                             <x-primary-button>

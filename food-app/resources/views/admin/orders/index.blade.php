@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Storage;
 <x-app-layout>
     <x-slot name="header">
         <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            <h2 class="font-semibold text-xl text-white leading-tight">
                 {{ __('Gestión de Pedidos') }}
             </h2>
         </div>
@@ -20,14 +20,14 @@ use Illuminate\Support\Facades\Storage;
             @endif
 
             <!-- Filtros -->
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 mb-6">
+            <div class="bg-white rounded-lg shadow-md border-2 border-teal-light p-4 mb-6">
                 <form method="GET" action="{{ route('admin.orders.index') }}" class="flex items-center space-x-4">
-                    <label for="status" class="text-sm font-medium text-gray-700 dark:text-gray-300">Filtrar por estado:</label>
+                    <label for="status" class="text-sm font-medium text-teal-dark">Filtrar por estado:</label>
                     <select 
                         name="status" 
                         id="status"
                         onchange="this.form.submit()"
-                        class="px-4 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                        class="px-4 py-2 border border-teal-light rounded-md focus:ring-teal-light focus:border-teal-medium"
                     >
                         <option value="">Todos</option>
                         <option value="pendiente" {{ request('status') == 'pendiente' ? 'selected' : '' }}>Pendiente</option>
@@ -37,81 +37,81 @@ use Illuminate\Support\Facades\Storage;
                 </form>
             </div>
 
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg border-2 border-teal-light">
+                <div class="p-6 text-gray-900">
                     @if($orders->count() > 0)
                         <div class="overflow-x-auto">
-                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                                <thead class="bg-gray-50 dark:bg-gray-700">
+                            <table class="min-w-full divide-y divide-teal-pastel">
+                                <thead class="bg-teal-pastel">
                                     <tr>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-teal-dark uppercase tracking-wider">
                                             ID
                                         </th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-teal-dark uppercase tracking-wider">
                                             Cliente
                                         </th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-teal-dark uppercase tracking-wider">
                                             Teléfono
                                         </th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-teal-dark uppercase tracking-wider">
                                             Total
                                         </th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-teal-dark uppercase tracking-wider">
                                             Estado
                                         </th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-teal-dark uppercase tracking-wider">
                                             Fecha
                                         </th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-teal-dark uppercase tracking-wider">
                                             Acciones
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                <tbody class="bg-white divide-y divide-teal-pastel">
                                     @foreach($orders as $order)
-                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                                        <tr class="hover:bg-teal-pastel transition-colors">
                                             <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                                <div class="text-sm font-medium text-gray-900">
                                                     #{{ $order->id }}
                                                 </div>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="text-sm text-gray-900 dark:text-gray-100">
+                                                <div class="text-sm text-gray-900">
                                                     {{ $order->customer_name }}
                                                 </div>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="text-sm text-gray-500 dark:text-gray-400">
+                                                <div class="text-sm text-gray-500">
                                                     {{ $order->customer_phone }}
                                                 </div>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                                <div class="text-sm font-medium text-teal-dark">
                                                     ${{ number_format($order->total, 2) }}
                                                 </div>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 @if($order->status == 'pendiente')
-                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
+                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
                                                         Pendiente
                                                     </span>
                                                 @elseif($order->status == 'en_preparacion')
-                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
                                                         En Preparación
                                                     </span>
                                                 @else
-                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                                                         Entregado
                                                     </span>
                                                 @endif
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="text-sm text-gray-500 dark:text-gray-400">
+                                                <div class="text-sm text-gray-500">
                                                     {{ $order->created_at->format('d/m/Y H:i') }}
                                                 </div>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                <a href="{{ route('admin.orders.show', $order) }}" class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300">
+                                                <a href="{{ route('admin.orders.show', $order) }}" class="text-teal-dark hover:text-teal-medium font-medium">
                                                     Ver Detalle
                                                 </a>
                                             </td>

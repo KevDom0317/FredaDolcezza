@@ -1,20 +1,34 @@
-<nav x-data="{ open: false }" class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
+<nav x-data="{ open: false }" class="bg-teal-dark border-b border-teal-medium shadow-md">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
+                    <a href="{{ route('admin.index') }}" class="flex items-center space-x-2">
+                        <div class="w-10 h-10 bg-teal-light rounded-full flex items-center justify-center">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                            </svg>
+                        </div>
+                        <span class="text-white font-semibold text-lg">Admin Panel</span>
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
+                <div class="hidden space-x-4 sm:-my-px sm:ms-10 sm:flex">
+                    <a href="{{ route('admin.index') }}" class="inline-flex items-center px-3 py-2 border-b-2 {{ request()->routeIs('admin.index') ? 'border-teal-light text-white' : 'border-transparent text-teal-pastel hover:text-white hover:border-teal-light' }} text-sm font-medium leading-5 transition duration-150 ease-in-out">
+                        Dashboard
+                    </a>
+                    <a href="{{ route('admin.products.index') }}" class="inline-flex items-center px-3 py-2 border-b-2 {{ request()->routeIs('admin.products.*') ? 'border-teal-light text-white' : 'border-transparent text-teal-pastel hover:text-white hover:border-teal-light' }} text-sm font-medium leading-5 transition duration-150 ease-in-out">
+                        Productos
+                    </a>
+                    <a href="{{ route('admin.categories.index') }}" class="inline-flex items-center px-3 py-2 border-b-2 {{ request()->routeIs('admin.categories.*') ? 'border-teal-light text-white' : 'border-transparent text-teal-pastel hover:text-white hover:border-teal-light' }} text-sm font-medium leading-5 transition duration-150 ease-in-out">
+                        Categorías
+                    </a>
+                    <a href="{{ route('admin.orders.index') }}" class="inline-flex items-center px-3 py-2 border-b-2 {{ request()->routeIs('admin.orders.*') ? 'border-teal-light text-white' : 'border-transparent text-teal-pastel hover:text-white hover:border-teal-light' }} text-sm font-medium leading-5 transition duration-150 ease-in-out">
+                        Pedidos
+                    </a>
                 </div>
             </div>
 
@@ -22,7 +36,7 @@
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
-                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
+                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-teal-pastel bg-teal-medium hover:bg-teal-light hover:text-white focus:outline-none transition ease-in-out duration-150">
                             <div>{{ Auth::user()->name }}</div>
 
                             <div class="ms-1">
