@@ -13,15 +13,16 @@ class OrderController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Order::with('items.product')->latest();
+        $query = Order::with('items.product');
 
-        // Búsqueda por nombre de cliente o teléfono
+        // Búsqueda por nombre de cliente
         if ($request->has('search') && $request->search !== '') {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('customer_name', 'like', "%{$search}%")
-                  ->orWhere('customer_phone', 'like', "%{$search}%");
-            });
+            $query->where('customer_name', 'like', "%{$request->search}%");
+        }
+
+        // Búsqueda por teléfono
+        if ($request->has('phone_search') && $request->phone_search !== '') {
+            $query->where('customer_phone', 'like', "%{$request->phone_search}%");
         }
 
         // Filtro por estado
@@ -29,7 +30,30 @@ class OrderController extends Controller
             $query->where('status', $request->status);
         }
 
-        $orders = $query->paginate(15)->withQueryString();
+        // Ordenamiento
+        if ($request->has('sort')) {
+            $direction = $request->get('direction', 'asc');
+            switch($request->sort) {
+                case 'customer_name':
+                    $query->orderBy('customer_name', $direction);
+                    break;
+                case 'total':
+                    $query->orderBy('total', $direction);
+                    break;
+                case 'status':
+                    $query->orderBy('status', $direction);
+                    break;
+                case 'created_at':
+                    $query->orderBy('created_at', $direction);
+                    break;
+                default:
+                    $query->latest();
+            }
+        } else {
+            $query->latest();
+        }
+
+        $orders = $query->paginate(20)->withQueryString();
 
         return view('admin.orders.index', compact('orders'));
     }

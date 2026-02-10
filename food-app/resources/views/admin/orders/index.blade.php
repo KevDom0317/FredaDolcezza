@@ -1,148 +1,170 @@
+@extends('layouts.admin')
+
+@section('title', 'Pedidos')
+
 @php
-use Illuminate\Support\Facades\Storage;
+    $pageTitle = 'Pedidos';
+    $breadcrumbs = [
+        ['label' => 'Pedidos']
+    ];
 @endphp
 
-<x-app-layout>
-    <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-white leading-tight">
-                {{ __('Gestión de Pedidos') }}
-            </h2>
+@section('header-actions')
+<a href="{{ route('admin.index') }}" class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-medium">
+    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+    </svg>
+    Inicio
+</a>
+@endsection
+
+@section('content')
+<div class="bg-white rounded-lg shadow border border-gray-200">
+    <div class="p-6">
+        <div class="mb-4">
+            <h3 class="text-lg font-medium text-gray-900">Listado de registros</h3>
         </div>
-    </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <!-- Búsqueda y Filtros -->
-            <div class="bg-white rounded-lg shadow-md border-2 border-teal-light p-4 mb-6">
-                <form method="GET" action="{{ route('admin.orders.index') }}" class="flex flex-col md:flex-row gap-4">
-                    <div class="flex-1">
-                        <input 
-                            type="text" 
-                            name="search" 
-                            value="{{ request('search') }}"
-                            placeholder="Buscar por nombre de cliente o teléfono..." 
-                            class="w-full px-4 py-2 border border-teal-light rounded-md focus:ring-teal-light focus:border-teal-medium"
-                        >
-                    </div>
-                    <div class="flex gap-2">
-                        <select 
-                            name="status" 
-                            class="px-4 py-2 border border-teal-light rounded-md focus:ring-teal-light focus:border-teal-medium"
-                        >
-                            <option value="">Todos los estados</option>
-                            <option value="pendiente" {{ request('status') == 'pendiente' ? 'selected' : '' }}>Pendiente</option>
-                            <option value="en_preparacion" {{ request('status') == 'en_preparacion' ? 'selected' : '' }}>En Preparación</option>
-                            <option value="entregado" {{ request('status') == 'entregado' ? 'selected' : '' }}>Entregado</option>
-                        </select>
-                        <button type="submit" class="px-4 py-2 bg-teal-gradient text-white rounded-md hover:opacity-90 transition-opacity">
-                            Buscar
-                        </button>
-                        @if(request('search') || request('status'))
-                            <a href="{{ route('admin.orders.index') }}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors">
-                                Limpiar
-                            </a>
-                        @endif
-                    </div>
-                </form>
-            </div>
-
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg border-2 border-teal-light">
-                <div class="p-6 text-gray-900">
-                    @if($orders->count() > 0)
-                        <div class="overflow-x-auto -mx-6 sm:mx-0">
-                            <table class="min-w-full divide-y divide-teal-pastel">
-                                <thead class="bg-teal-pastel">
-                                    <tr>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-teal-dark uppercase tracking-wider">
-                                            ID
-                                        </th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-teal-dark uppercase tracking-wider">
-                                            Cliente
-                                        </th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-teal-dark uppercase tracking-wider">
-                                            Teléfono
-                                        </th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-teal-dark uppercase tracking-wider">
-                                            Total
-                                        </th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-teal-dark uppercase tracking-wider">
-                                            Estado
-                                        </th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-teal-dark uppercase tracking-wider">
-                                            Fecha
-                                        </th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-teal-dark uppercase tracking-wider">
-                                            Acciones
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody class="bg-white divide-y divide-teal-pastel">
-                                    @foreach($orders as $order)
-                                        <tr class="hover:bg-teal-pastel transition-colors">
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="text-sm font-medium text-gray-900">
-                                                    #{{ $order->id }}
-                                                </div>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="text-sm text-gray-900">
-                                                    {{ $order->customer_name }}
-                                                </div>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="text-sm text-gray-500">
-                                                    {{ $order->customer_phone }}
-                                                </div>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="text-sm font-medium text-teal-dark">
-                                                    ${{ number_format($order->total, 2) }}
-                                                </div>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                @if($order->status == 'pendiente')
-                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                                        Pendiente
-                                                    </span>
-                                                @elseif($order->status == 'en_preparacion')
-                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                                                        En Preparación
-                                                    </span>
-                                                @else
-                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                        Entregado
-                                                    </span>
-                                                @endif
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="text-sm text-gray-500">
-                                                    {{ $order->created_at->format('d/m/Y H:i') }}
-                                                </div>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                <a href="{{ route('admin.orders.show', $order) }}" class="text-teal-dark hover:text-teal-medium font-medium">
-                                                    Ver Detalle
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="mt-4 flex justify-center">
-                            {{ $orders->links('vendor.pagination.tailwind') }}
-                        </div>
-                    @else
-                        <div class="text-center py-12">
-                            <p class="text-gray-500 dark:text-gray-400">No hay pedidos registrados.</p>
-                        </div>
-                    @endif
+        <!-- Filtros y Búsqueda -->
+        <form method="GET" action="{{ route('admin.orders.index') }}" class="mb-4">
+            @if(request('search') || request('status'))
+                <div class="mb-2">
+                    <a href="{{ route('admin.orders.index') }}" class="text-sm text-gray-600 hover:text-gray-900 inline-flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+                        </svg>
+                        Limpiar filtro
+                    </a>
                 </div>
+            @endif
+            <div class="text-sm text-gray-600 mb-4">
+                Viendo {{ $orders->firstItem() ?? 0 }} - {{ $orders->lastItem() ?? 0 }} de {{ $orders->total() }} resultados.
             </div>
-        </div>
+            
+            <!-- Filtros inline en la tabla -->
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                #
+                            </th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <div class="flex items-center">
+                                    Cliente
+                                    <a href="{{ request()->fullUrlWithQuery(['sort' => 'customer_name', 'direction' => request('direction') == 'asc' ? 'desc' : 'asc']) }}" class="ml-1">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
+                                        </svg>
+                                    </a>
+                                </div>
+                                <input type="text" name="search" value="{{ request('search') }}" placeholder="Filtrar..." class="mt-1 block w-full text-xs border-gray-300 rounded-md shadow-sm focus:ring-teal-medium focus:border-teal-medium">
+                            </th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Teléfono
+                                <input type="text" name="phone_search" value="{{ request('phone_search') }}" placeholder="Filtrar..." class="mt-1 block w-full text-xs border-gray-300 rounded-md shadow-sm focus:ring-teal-medium focus:border-teal-medium">
+                            </th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <div class="flex items-center">
+                                    Total
+                                    <a href="{{ request()->fullUrlWithQuery(['sort' => 'total', 'direction' => request('direction') == 'asc' ? 'desc' : 'asc']) }}" class="ml-1">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <div class="flex items-center">
+                                    Estado
+                                    <a href="{{ request()->fullUrlWithQuery(['sort' => 'status', 'direction' => request('direction') == 'asc' ? 'desc' : 'asc']) }}" class="ml-1">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
+                                        </svg>
+                                    </a>
+                                </div>
+                                <select name="status" class="mt-1 block w-full text-xs border-gray-300 rounded-md shadow-sm focus:ring-teal-medium focus:border-teal-medium">
+                                    <option value="">Todos</option>
+                                    <option value="pendiente" {{ request('status') == 'pendiente' ? 'selected' : '' }}>Pendiente</option>
+                                    <option value="en_preparacion" {{ request('status') == 'en_preparacion' ? 'selected' : '' }}>En Preparación</option>
+                                    <option value="entregado" {{ request('status') == 'entregado' ? 'selected' : '' }}>Entregado</option>
+                                </select>
+                            </th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <div class="flex items-center">
+                                    Fecha
+                                    <a href="{{ request()->fullUrlWithQuery(['sort' => 'created_at', 'direction' => request('direction') == 'asc' ? 'desc' : 'asc']) }}" class="ml-1">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <button type="submit" class="mt-1 w-full px-2 py-1 text-xs bg-teal-medium text-white rounded hover:bg-teal-dark">Buscar</button>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        @forelse($orders as $order)
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    #{{ $order->id }}
+                                </td>
+                                <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    {{ $order->customer_name }}
+                                </td>
+                                <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {{ $order->customer_phone }}
+                                </td>
+                                <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-teal-dark">
+                                    ${{ number_format($order->total, 2) }}
+                                </td>
+                                <td class="px-4 py-4 whitespace-nowrap text-sm">
+                                    @if($order->status == 'pendiente')
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                            Pendiente
+                                        </span>
+                                    @elseif($order->status == 'en_preparacion')
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                            En Preparación
+                                        </span>
+                                    @else
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                            Entregado
+                                        </span>
+                                    @endif
+                                </td>
+                                <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {{ $order->created_at->format('d/m/Y H:i') }}
+                                </td>
+                                <td class="px-4 py-4 whitespace-nowrap text-sm font-medium">
+                                    <a href="{{ route('admin.orders.show', $order) }}" class="text-blue-600 hover:text-blue-900" title="Ver Detalle">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                        </svg>
+                                    </a>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="7" class="px-4 py-12 text-center text-gray-500">
+                                    No hay pedidos registrados.
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Paginación -->
+            @if($orders->hasPages())
+                <div class="mt-4 flex justify-center">
+                    {{ $orders->links('vendor.pagination.tailwind') }}
+                </div>
+            @endif
+        </form>
     </div>
-</x-app-layout>
-
-
-
+</div>
+@endsection

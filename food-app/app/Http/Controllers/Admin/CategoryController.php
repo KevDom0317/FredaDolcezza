@@ -16,15 +16,16 @@ class CategoryController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Category::latest();
+        $query = Category::query();
 
-        // Búsqueda por nombre o descripción
+        // Búsqueda por nombre
         if ($request->has('search') && $request->search !== '') {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%");
-            });
+            $query->where('name', 'like', "%{$request->search}%");
+        }
+
+        // Búsqueda por descripción
+        if ($request->has('description_search') && $request->description_search !== '') {
+            $query->where('description', 'like', "%{$request->description_search}%");
         }
 
         // Filtro por estado
@@ -32,7 +33,24 @@ class CategoryController extends Controller
             $query->where('is_active', $request->status);
         }
 
-        $categories = $query->paginate(10)->withQueryString();
+        // Ordenamiento
+        if ($request->has('sort')) {
+            $direction = $request->get('direction', 'asc');
+            switch($request->sort) {
+                case 'name':
+                    $query->orderBy('name', $direction);
+                    break;
+                case 'is_active':
+                    $query->orderBy('is_active', $direction);
+                    break;
+                default:
+                    $query->latest();
+            }
+        } else {
+            $query->latest();
+        }
+
+        $categories = $query->paginate(20)->withQueryString();
 
         return view('admin.categories.index', compact('categories'));
     }

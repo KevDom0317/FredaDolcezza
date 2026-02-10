@@ -17,19 +17,24 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Product::with('category')->latest();
+        $query = Product::with('category');
 
-        // Búsqueda por nombre o descripción
+        // Búsqueda por nombre
         if ($request->has('search') && $request->search !== '') {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%");
-            });
+            $query->where('name', 'like', "%{$request->search}%");
         }
 
-        // Filtro por categoría
-        if ($request->has('category') && $request->category !== '') {
+        // Búsqueda por descripción
+        if ($request->has('description_search') && $request->description_search !== '') {
+            $query->where('description', 'like', "%{$request->description_search}%");
+        }
+
+        // Filtro por categoría (por nombre de categoría)
+        if ($request->has('category_search') && $request->category_search !== '') {
+            $query->whereHas('category', function($q) use ($request) {
+                $q->where('name', 'like', "%{$request->category_search}%");
+            });
+        } elseif ($request->has('category') && $request->category !== '') {
             $query->where('category_id', $request->category);
         }
 
@@ -38,7 +43,29 @@ class ProductController extends Controller
             $query->where('is_available', $request->status);
         }
 
-        $products = $query->paginate(10)->withQueryString();
+        // Ordenamiento
+        if ($request->has('sort')) {
+            $direction = $request->get('direction', 'asc');
+            switch($request->sort) {
+                case 'name':
+                    $query->orderBy('name', $direction);
+                    break;
+                case 'category':
+                    $query->join('categories', 'products.category_id', '=', 'categories.id')
+                          ->orderBy('categories.name', $direction)
+                          ->select('products.*');
+                    break;
+                case 'is_available':
+                    $query->orderBy('is_available', $direction);
+                    break;
+                default:
+                    $query->latest();
+            }
+        } else {
+            $query->latest();
+        }
+
+        $products = $query->paginate(20)->withQueryString();
 
         return view('admin.products.index', compact('products'));
     }
