@@ -15,12 +15,21 @@ class OrderController extends Controller
     {
         $query = Order::with('items.product')->latest();
 
+        // Búsqueda por nombre de cliente o teléfono
+        if ($request->has('search') && $request->search !== '') {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('customer_name', 'like', "%{$search}%")
+                  ->orWhere('customer_phone', 'like', "%{$search}%");
+            });
+        }
+
         // Filtro por estado
         if ($request->has('status') && $request->status !== '') {
             $query->where('status', $request->status);
         }
 
-        $orders = $query->paginate(15);
+        $orders = $query->paginate(15)->withQueryString();
 
         return view('admin.orders.index', compact('orders'));
     }
@@ -51,6 +60,7 @@ class OrderController extends Controller
             ->with('success', 'Estado del pedido actualizado exitosamente');
     }
 }
+
 
 
 

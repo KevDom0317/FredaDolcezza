@@ -54,9 +54,7 @@ use Illuminate\Support\Facades\Storage;
         <!-- Contenido -->
         <main class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             @if (session('success'))
-                <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-                    <span class="block sm:inline">{{ session('success') }}</span>
-                </div>
+                <x-alert type="success">{{ session('success') }}</x-alert>
             @endif
 
             <div class="bg-white/95 backdrop-blur-sm rounded-lg shadow-xl border-2 border-teal-light p-8">

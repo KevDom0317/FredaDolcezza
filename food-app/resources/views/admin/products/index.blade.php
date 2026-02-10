@@ -18,17 +18,55 @@ use Illuminate\Support\Facades\Storage;
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            @if (session('success'))
-                <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-                    <span class="block sm:inline">{{ session('success') }}</span>
-                </div>
-            @endif
+            <!-- Búsqueda y Filtros -->
+            <div class="bg-white rounded-lg shadow-md border-2 border-teal-light p-4 mb-6">
+                <form method="GET" action="{{ route('admin.products.index') }}" class="flex flex-col md:flex-row gap-4">
+                    <div class="flex-1">
+                        <input 
+                            type="text" 
+                            name="search" 
+                            value="{{ request('search') }}"
+                            placeholder="Buscar por nombre o descripción..." 
+                            class="w-full px-4 py-2 border border-teal-light rounded-md focus:ring-teal-light focus:border-teal-medium"
+                        >
+                    </div>
+                    <div class="flex gap-2">
+                        <select 
+                            name="category" 
+                            class="px-4 py-2 border border-teal-light rounded-md focus:ring-teal-light focus:border-teal-medium"
+                        >
+                            <option value="">Todas las categorías</option>
+                            @foreach(\App\Models\Category::all() as $cat)
+                                <option value="{{ $cat->id }}" {{ request('category') == $cat->id ? 'selected' : '' }}>
+                                    {{ $cat->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <select 
+                            name="status" 
+                            class="px-4 py-2 border border-teal-light rounded-md focus:ring-teal-light focus:border-teal-medium"
+                        >
+                            <option value="">Todos los estados</option>
+                            <option value="1" {{ request('status') == '1' ? 'selected' : '' }}>Disponible</option>
+                            <option value="0" {{ request('status') == '0' ? 'selected' : '' }}>No disponible</option>
+                        </select>
+                        <button type="submit" class="px-4 py-2 bg-teal-gradient text-white rounded-md hover:opacity-90 transition-opacity">
+                            Buscar
+                        </button>
+                        @if(request('search') || request('category') || request('status'))
+                            <a href="{{ route('admin.products.index') }}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors">
+                                Limpiar
+                            </a>
+                        @endif
+                    </div>
+                </form>
+            </div>
 
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg border-2 border-teal-light">
                 <div class="p-6 text-gray-900">
                     @if($products->count() > 0)
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <div class="overflow-x-auto -mx-6 sm:mx-0">
+                            <table class="min-w-full divide-y divide-teal-pastel">
                                 <thead class="bg-teal-pastel">
                                     <tr>
                                         <th class="px-6 py-3 text-left text-xs font-medium text-teal-dark uppercase tracking-wider">
@@ -111,8 +149,8 @@ use Illuminate\Support\Facades\Storage;
                                 </tbody>
                             </table>
                         </div>
-                        <div class="mt-4">
-                            {{ $products->links() }}
+                        <div class="mt-4 flex justify-center">
+                            {{ $products->links('vendor.pagination.tailwind') }}
                         </div>
                     @else
                         <div class="text-center py-12">

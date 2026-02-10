@@ -22,10 +22,30 @@ class UpdateCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
-            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+            'name' => ['required', 'string', 'max:255', 'min:3', 'unique:categories,name,' . $this->route('category')->id],
+            'description' => ['nullable', 'string', 'max:1000'],
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:2048'],
             'is_active' => ['nullable', 'boolean'],
+        ];
+    }
+
+    /**
+     * Get custom messages for validator errors.
+     *
+     * @return array
+     */
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'El nombre de la categoría es obligatorio.',
+            'name.string' => 'El nombre debe ser texto válido.',
+            'name.max' => 'El nombre no puede exceder 255 caracteres.',
+            'name.min' => 'El nombre debe tener al menos 3 caracteres.',
+            'name.unique' => 'Ya existe una categoría con ese nombre.',
+            'description.max' => 'La descripción no puede exceder 1000 caracteres.',
+            'image.image' => 'El archivo debe ser una imagen válida.',
+            'image.mimes' => 'La imagen debe ser de tipo: jpeg, png, jpg, gif o webp.',
+            'image.max' => 'La imagen no puede pesar más de 2MB.',
         ];
     }
 }

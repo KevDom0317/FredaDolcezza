@@ -14,9 +14,26 @@ class CategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $categories = Category::latest()->paginate(10);
+        $query = Category::latest();
+
+        // Búsqueda por nombre o descripción
+        if ($request->has('search') && $request->search !== '') {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        // Filtro por estado
+        if ($request->has('status') && $request->status !== '') {
+            $query->where('is_active', $request->status);
+        }
+
+        $categories = $query->paginate(10)->withQueryString();
+
         return view('admin.categories.index', compact('categories'));
     }
 
