@@ -34,10 +34,7 @@
 <body class="font-sans antialiased bg-gray-50" x-data="{ sidebarOpen: window.innerWidth >= 1024 }" x-init="window.addEventListener('resize', () => { if (window.innerWidth >= 1024) sidebarOpen = true; })">
     <div class="flex h-screen overflow-hidden">
         <!-- Sidebar -->
-        <aside 
-            :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
-            class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0"
-        >
+        
             <!-- Sidebar Header -->
             <div class="flex items-center justify-between h-16 px-4 bg-teal-dark border-b border-teal-medium">
                 <div class="flex items-center space-x-2">
@@ -129,7 +126,7 @@
         ></div>
 
         <!-- Main Content -->
-        <div class="flex-1 flex flex-col overflow-hidden">
+        <div class="flex-1 flex flex-col overflow-hidden ">
             <!-- Top Header -->
             <header class="bg-teal-dark shadow-sm z-30">
                 <div class="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
